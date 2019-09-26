@@ -29,37 +29,35 @@ public class Client {
 
 		try {
 			boolean check = true;
-			
-			while(check) {
-			sc = new Socket("211.238.142.27", 8282);
-			System.out.println("서버로 전송할 메세지 입력");
-			String str = ssc.next();
-			os = sc.getOutputStream(); //byte
-			ow = new OutputStreamWriter(os); //char 
-			bw = new BufferedWriter(ow);
-			bw.write(str+"\r\n");
-			bw.flush();
-			System.out.println("서버로 전송 완료");
-			
-			if(str.equals("q")) {
-				check=false;
-				System.out.println("상대방이 프로그램 종료");
-				break;
-			
-				}
 
-			is = sc.getInputStream(); //byte
-			ir = new InputStreamReader(is);//char
-			br = new BufferedReader(ir); //String 
-			str =br.readLine();
-			System.out.println(str);
-			
-			if(str.equals("q")) {
-				check=false;
-				System.out.println("상대방이 프로그램 종료");
-				break;
-			
-			}
+			sc = new Socket("211.238.142.27", 8282);
+
+			while(check) {
+				System.out.println("서버로 전송할 메세지 입력");
+				String str = ssc.next();
+				os = sc.getOutputStream(); //byte
+				ow = new OutputStreamWriter(os); //char 
+				bw = new BufferedWriter(ow);
+				bw.write(str+"\r\n");
+				bw.flush();
+				if(str.toUpperCase().equals("Q")) {
+					check=false;
+					System.out.println("상대방이 프로그램 종료");
+					break;
+				}
+				System.out.println("서버로 전송 완료");
+
+				is = sc.getInputStream(); //byte
+				ir = new InputStreamReader(is);//char
+				br = new BufferedReader(ir); //String 
+				str =br.readLine();
+				if(str.toUpperCase().equals("Q")) {
+					check=false;
+					System.out.println("상대방이 프로그램 종료");
+					break;
+
+				}
+				System.out.println(str);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
