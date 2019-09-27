@@ -3,7 +3,6 @@ package com.jh.n2;
 import java.io.FileReader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.jh.n2.member.Member;
@@ -13,43 +12,40 @@ import com.jh.n2.network.Network;
 public class Server3 {
 
 	public static void main(String[] args) {
-		//init -> socket
+
+
+		// init -> socket
 		// id, pw를 분리 
-		//파싱 클레스 
-		Network network = new Network();
-		MemberService m = new MemberService();
-		ArrayList<Member> ar = new ArrayList<Member>();
-		ar = m.init();
+		// 파싱 클레스 
+		ServerSocket ss = null;
+		Socket sc = null;
+		MemberService ms = new MemberService();
+		Network nw = new Network();
+
 		Scanner ssc = new Scanner(System.in);
 		System.out.println();
-		
+
 		try {
-			
-			ServerSocket ss = new ServerSocket(8282);
-			Socket sc = ss.accept();
-			String login = network.receive(sc);
-			
-			String[] w = login.split(",");
-			
-			boolean check = m.memberlogin(w[0], w[1]);
-			
-			if(check ==true) {
-				login = "로그인성공";
-			}else {
-				login ="로그인실패";
+			ms.init();
+			ss = new ServerSocket(8282);
+			sc = ss.accept();
+			String msg = nw.receive(sc); //id,pw
+			String[] info = msg.split(",");
+			Member member = new Member();
+			member.setId(info[0]);
+			member.setPw(info[1]);
+
+			member = ms.memberlogin(member);
+			msg = "0"; //로그인 실패
+
+			if(member !=null) {
+				msg ="1";//로그인 성공
 			}
-			 
-			
+			nw.send(sc,msg);
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
-		
-		
-		
-		
-			
+		}		
 	}
-
 }
